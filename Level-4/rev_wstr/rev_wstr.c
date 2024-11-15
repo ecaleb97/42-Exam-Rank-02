@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tab_mult.c                                         :+:      :+:    :+:   */
+/*   rev_wstr.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: envillan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 21:36:40 by envillan          #+#    #+#             */
-/*   Updated: 2024/11/11 22:22:14 by envillan         ###   ########.fr       */
+/*   Created: 2024/11/15 22:41:37 by envillan          #+#    #+#             */
+/*   Updated: 2024/11/15 23:15:22 by envillan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,65 +17,57 @@ void	ft_putchar(char c)
 	write(1, &c, 1);
 }
 
-void	ft_putstr(char *str)
+int	is_space(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}
+
+int	ft_strlen(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
-	{
-		write(1, &str[i], 1);
 		i++;
-	}
+	return (i);
 }
 
-void	ft_putnbr(int number)
-{
-	if (number > 9)
-	{
-		ft_putnbr(number / 10);
-		ft_putnbr(number % 10);
-	}
-	else
-		ft_putchar(number + '0');
-}
-
-int	ft_atoi(char *string)
+void	rev_wstr(char *str)
 {
 	int	i;
-	int	result;
+	int	j;
+	int	word;
 
-	i = 0;
-	result = 0;
-	while (string[i] != '\0')
+	i = ft_strlen(str) - 1;
+	word = 1;
+	while (is_space(str[i]))
+		i--;
+	while (i >= 0)
 	{
-		result = result * 10 + string[i] - '0';
-		i++;
+		while (i >= 0 && (str[i] == '\0' || is_space(str[i])))
+			i--;
+		j = i;
+		while (j >= 0 && !is_space(str[j]))
+			j--;
+		if (word == 0)
+			ft_putchar(' ');
+		write(1, str + j + 1, i - j);
+		word = 0;
+		i = j;
 	}
-	return (result);
 }
 
 int	main(int argc, char **argv)
 {
-	int	i;
-	int	number;
-
-	i = 1;
+	if (argc != 2)
+	{
+		ft_putchar('\n');
+		return (1);
+	}
 	if (argc == 2)
 	{
-		number = ft_atoi(argv[1]);
-		while (i <= 9)
-		{
-			ft_putnbr(i);
-			ft_putstr(" x ");
-			ft_putnbr(number);
-			ft_putstr(" = ");
-			ft_putnbr(i * number);
-			if (i < 9)
-				write(1, "\n", 1);
-			i++;
-		}
+		rev_wstr(argv[1]);
+		ft_putchar('\n');
 	}
-	write(1, "\n", 1);
 	return (0);
 }

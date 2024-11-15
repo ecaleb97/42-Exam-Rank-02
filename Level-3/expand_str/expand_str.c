@@ -1,16 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tab_mult.c                                         :+:      :+:    :+:   */
+/*   expand_str.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: envillan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 21:36:40 by envillan          #+#    #+#             */
-/*   Updated: 2024/11/11 22:22:14 by envillan         ###   ########.fr       */
+/*   Created: 2024/11/07 08:08:40 by envillan          #+#    #+#             */
+/*   Updated: 2024/11/07 08:25:45 by envillan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+
+int	is_space(char c)
+{
+	return ((c == ' ') || (c >= 9 && c <= 13));
+}
 
 void	ft_putchar(char c)
 {
@@ -29,53 +34,32 @@ void	ft_putstr(char *str)
 	}
 }
 
-void	ft_putnbr(int number)
-{
-	if (number > 9)
-	{
-		ft_putnbr(number / 10);
-		ft_putnbr(number % 10);
-	}
-	else
-		ft_putchar(number + '0');
-}
-
-int	ft_atoi(char *string)
+void	expand_str(char *str)
 {
 	int	i;
-	int	result;
 
 	i = 0;
-	result = 0;
-	while (string[i] != '\0')
+	while (is_space(str[i]))
+		i++;
+	while (str[i] != '\0')
 	{
-		result = result * 10 + string[i] - '0';
+		if (is_space(str[i]))
+		{
+			if (str[i + 1] > ' ' && (str[i + 1] != '\0'))
+				ft_putstr("   ");
+		}
+		else if (!is_space(str[i]))
+			ft_putchar(str[i]);
 		i++;
 	}
-	return (result);
 }
 
 int	main(int argc, char **argv)
 {
-	int	i;
-	int	number;
-
-	i = 1;
 	if (argc == 2)
 	{
-		number = ft_atoi(argv[1]);
-		while (i <= 9)
-		{
-			ft_putnbr(i);
-			ft_putstr(" x ");
-			ft_putnbr(number);
-			ft_putstr(" = ");
-			ft_putnbr(i * number);
-			if (i < 9)
-				write(1, "\n", 1);
-			i++;
-		}
+		expand_str(argv[1]);
 	}
-	write(1, "\n", 1);
+	ft_putchar('\n');
 	return (0);
 }
